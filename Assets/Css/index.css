@@ -1,32 +1,35 @@
-/* Login Form */
+/* Login Styles */
 .loginForm {
-    max-width: 400px;
-    margin: 0 auto;
-    padding: 1rem;
     background-color: #fdfaf5;
-    border-radius: 6px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 400px;
 }
 
 .loginH2 {
     text-align: center;
-    color: #333;
-    margin-bottom: 1rem;
+    color: #1f1f1f;
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
 }
 
 .loginH3 {
-    display: block;
     font-weight: bold;
-    margin-bottom: 0.3rem;
-    color: #333;
+    color: #1f1f1f;
+    margin-bottom: 0.5rem;
 }
 
 .loginForm input {
     width: 100%;
     padding: 0.75rem;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
     border: 1px solid #ccc;
     border-radius: 4px;
+    font-size: 1rem;
     background-color: #f9f9f9;
     box-sizing: border-box;
 }
@@ -42,10 +45,11 @@
     padding: 0.75rem;
     background-color: #007BFF;
     color: #fff;
+    font-size: 1rem;
     border: none;
     border-radius: 4px;
-    font-size: 1rem;
     cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
 .loginBtn:hover {
