@@ -36,6 +36,10 @@ header {
     max-width: 1200px;
     margin: 0 auto;
     font-family: 'Helvetica', 'Arial', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 70vh;
 }
 
 
