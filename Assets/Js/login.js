@@ -1,4 +1,4 @@
-// Firebase Initialization
+// Firebase initialization
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 
@@ -14,26 +14,38 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-// Login Form Handling
+// format road name into valid email
+function formatRoadNameToEmail(roadName) {
+  let cleanName = roadName.trim().toLowerCase();
+  cleanName = cleanName.replace(/[^a-z0-9]/g, '.');
+  cleanName = cleanName.replace(/\.+/g, '.');
+  cleanName = cleanName.replace(/^\.|\.$/g, '');
+  return `${cleanName}@behindthebar.com`;
+}
+
+// handle login form submit
 const loginForm = document.querySelector('.loginForm');
 loginForm.addEventListener('submit', (e) => {
   e.preventDefault();
 
-  // Get Input Values
+  // get form inputs
   const roadName = document.getElementById('roadName').value;
   const password = document.getElementById('password').value;
 
-  // Map Road Name to Firebase Email
-  const email = `${roadName}@behindthebar.com`;
+  // format email
+  const email = formatRoadNameToEmail(roadName);
 
-  // Sign In User
+  // sign user in
   signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
-      // Redirect on Successful Login
+      
+      // redirect to dashboard
       window.location.href = "dashboard.html";
     })
+    
     .catch((error) => {
-      // Show Error if Login Fails
+      
+      // login failed alert
       alert("Login failed: " + error.message);
     });
 });
