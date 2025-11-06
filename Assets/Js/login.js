@@ -1,6 +1,6 @@
 // Firebase initialization
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+import { getAuth, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCTIK0ulR0uSHoiPBoK4Fymutw81sM7H_8",
@@ -38,14 +38,37 @@ loginForm.addEventListener('submit', (e) => {
   // sign user in
   signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
-      
       // redirect to dashboard
       window.location.href = "dashboard.html";
     })
-    
     .catch((error) => {
-      
       // login failed alert
       alert("Login failed: " + error.message);
     });
 });
+
+// Auto logout after inactivity or tab close
+let inactivityTimer;
+
+// reset inactivity timer
+function resetInactivityTimer() {
+  clearTimeout(inactivityTimer);
+  inactivityTimer = setTimeout(() => {
+    signOut(auth).then(() => {
+      window.location.href = "index.html";
+    });
+  }, 15 * 60 * 1000); // 15 min
+}
+
+// track activity
+['click', 'mousemove', 'keydown', 'scroll'].forEach(evt => {
+  window.addEventListener(evt, resetInactivityTimer);
+});
+
+// sign out on tab/window close
+window.addEventListener('beforeunload', () => {
+  signOut(auth);
+});
+
+// initialize inactivity timer on page load
+resetInactivityTimer();
