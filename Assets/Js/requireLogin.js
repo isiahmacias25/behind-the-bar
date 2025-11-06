@@ -1,7 +1,8 @@
-// Firebase Initialization
+// Firebase initialization
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 
+// Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyCTIK0ulR0uSHoiPBoK4Fymutw81sM7H_8",
   authDomain: "behindthebar.firebaseapp.com",
@@ -11,10 +12,11 @@ const firebaseConfig = {
   appId: "1:134727677191:web:6c15d2e83196abd36b81a2"
 };
 
+// Initialize Firebase and Auth
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-// Require Login Check
+// Require login check
 onAuthStateChanged(auth, (user) => {
   if (!user) {
     window.location.href = "index.html"; // redirect if not logged in
@@ -24,7 +26,6 @@ onAuthStateChanged(auth, (user) => {
 // Auto logout after inactivity
 let inactivityTimer;
 
-// reset inactivity timer
 function resetInactivityTimer() {
   clearTimeout(inactivityTimer);
   inactivityTimer = setTimeout(() => {
@@ -34,15 +35,15 @@ function resetInactivityTimer() {
   }, 15 * 60 * 1000); // 15 minutes
 }
 
-// track activity
+// Track user activity
 ['click', 'mousemove', 'keydown', 'scroll'].forEach(evt => {
   window.addEventListener(evt, resetInactivityTimer);
 });
 
-// sign out on tab/window close
+// Logout on tab/window close
 window.addEventListener('beforeunload', () => {
   signOut(auth);
 });
 
-// initialize inactivity timer on page load
+// Start inactivity timer
 resetInactivityTimer();
