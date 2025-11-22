@@ -1,10 +1,10 @@
-// Function to make any image circular and set it as the favicon
+// Function to make an image circular and set it as the favicon
 function makeFaviconCircular(src) {
-  const img = new Image();        // Create a new image object
-  img.src = src;                   // Set the source of the image
-  img.onload = () => {             // Wait until the image loads
-    const size = 64;               // Canvas will be square: 64x64
-    const canvas = document.createElement('canvas'); // Create canvas
+  const img = new Image();        // Create an image object
+  img.src = src;                   // Set the image source
+  img.onload = () => {             // Run after image loads
+    const size = 64;               // Canvas will be square
+    const canvas = document.createElement('canvas'); // Create a canvas
     canvas.width = size;
     canvas.height = size;
     const ctx = canvas.getContext('2d');
@@ -15,14 +15,14 @@ function makeFaviconCircular(src) {
     ctx.closePath();
     ctx.clip();
 
-    // Draw the image inside the circular area
+    // Draw the image inside the circle
     ctx.drawImage(img, 0, 0, size, size);
 
-    // Update the favicon link with the canvas image
-    const favicon = document.getElementById('favicon');
+    // Replace the favicon link with the circular image
+    const favicon = document.querySelector('link[rel="icon"]');
     favicon.href = canvas.toDataURL('image/png');
   };
 }
 
-// Call the function with your image path
+// Call the function with your logo path
 makeFaviconCircular('Assets/Images/logo.png');
