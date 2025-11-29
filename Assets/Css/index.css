@@ -61,16 +61,18 @@
 /* Welcome Styles: */
 .mainLogo {
     width: 250px;
-    height: auto;
-    margin-top: 1rem;
-    display: block;
+    height: 250px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #333;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 
 /* Section Styles: */
 .leftSection {
-    flex: 0 1 auto;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: center;    /* vertical centering */
+    align-items: center;        /* horizontal centering */
 }
