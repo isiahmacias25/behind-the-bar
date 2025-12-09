@@ -24,10 +24,8 @@ onAuthStateChanged(auth, (user) => {
     // Redirect to login page if not logged in
     window.location.href = "index.html";
   } else {
-    // Update footer with logged-in user's name or email
-    const footerSpan = document.getElementById('currentUser');
-    if (footerSpan) {
-      footerSpan.textContent = user.displayName || user.email;
+   
+   
     }
   }
 });
