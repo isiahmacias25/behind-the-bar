@@ -12,38 +12,49 @@ const firebaseConfig = {
   appId: "1:134727677191:web:6c15d2e83196abd36b81a2"
 };
 
-// Initialize Firebase and Auth
+// Initialize Firebase app
 const app = initializeApp(firebaseConfig);
+
+// Initialize Firebase auth
 const auth = getAuth(app);
 
 // Require login check
 onAuthStateChanged(auth, (user) => {
   if (!user) {
-    window.location.href = "index.html"; // redirect if not logged in
+    // Redirect to login page if not logged in
+    window.location.href = "index.html";
+  } else {
+    // Update footer with logged-in user's name or email
+    const footerSpan = document.getElementById('loggedInAs');
+    if (footerSpan) {
+      footerSpan.textContent = user.displayName || user.email;
+    }
   }
 });
 
 // Auto logout after inactivity
 let inactivityTimer;
 
+// Reset inactivity timer
 function resetInactivityTimer() {
   clearTimeout(inactivityTimer);
   inactivityTimer = setTimeout(() => {
+    // Sign out user after 15 minutes of inactivity
     signOut(auth).then(() => {
       window.location.href = "index.html";
     });
   }, 15 * 60 * 1000); // 15 minutes
 }
 
-// Track user activity
+// Track user activity to reset timer
 ['click', 'mousemove', 'keydown', 'scroll'].forEach(evt => {
   window.addEventListener(evt, resetInactivityTimer);
 });
 
-// Logout on tab/window close
+// Sign out user on tab/window close
 window.addEventListener('beforeunload', () => {
   signOut(auth);
 });
 
-// Start inactivity timer
+// Start inactivity timer on page load
 resetInactivityTimer();
