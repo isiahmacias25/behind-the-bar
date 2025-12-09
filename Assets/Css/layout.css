@@ -49,11 +49,37 @@ footer {
     background-color: #d8cbb7;
     color: #1f1f1f;
     text-align: center;
-    padding: 1rem 0;
     font-size: 0.9rem;
     border-top: 1px solid #bdb2a7;
     box-shadow: 0 -2px 5px rgba(0,0,0,0.05);
+    padding: 1rem 0;
 }
+
+footer .footer-user {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+footer .footer-bottom {
+    font-size: 0.8rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    align-items: center;
+}
+
+footer a#logoutBtn {
+    color: #1f1f1f;
+    text-decoration: none;
+    font-weight: bold;
+    margin-top: 0.3rem;
+    transition: color 0.2s;
+}
+
+footer a#logoutBtn:hover {
+    color: #4b3f36;
+}
+
 
 /* Nav Styles */
 nav {
