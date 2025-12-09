@@ -27,7 +27,6 @@ onAuthStateChanged(auth, (user) => {
    
    
     }
-  }
 });
 
 // Auto logout after inactivity
