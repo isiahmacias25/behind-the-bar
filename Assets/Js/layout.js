@@ -37,7 +37,7 @@ onAuthStateChanged(auth, (user) => {
     }
 
     // Update footer element with road name
-    const footerNameElem = document.getElementById('footerRoadName');
+    const footerNameElem = document.getElementById('currentUser');
     if (footerNameElem) footerNameElem.textContent = sessionStorage.getItem('roadName');
   }
 });
