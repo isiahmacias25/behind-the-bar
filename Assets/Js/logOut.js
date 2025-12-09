@@ -31,7 +31,7 @@ logoutBtn.addEventListener("click", () => {
     .then(() => {
       
       // Redirect to login page after logout
-      window.location.href = "index.html";
+      window.location.href = "/";
     })
     .catch((error) => {
       
