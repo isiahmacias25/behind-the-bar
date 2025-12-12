@@ -104,4 +104,4 @@ function makeFaviconCircular(src) {
 }
 
 // Call function to make favicon circular with logo path
-makeFaviconCircular('Assets/Images/logo.png');
+makeFaviconCircular('../Assets/Images/logo.png');
