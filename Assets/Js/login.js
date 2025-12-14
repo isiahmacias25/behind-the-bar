@@ -36,7 +36,7 @@ loginForm.addEventListener('submit', (e) => {
 
   signInWithEmailAndPassword(auth, email, password)
     .then(() => {
-      window.location.href = "Bartender/dashboard.html"; // redirect on success
+      window.location.href = "Bartender/dashboard"; // redirect on success
     })
     .catch((error) => {
       alert("Login failed: " + error.message); // show error
