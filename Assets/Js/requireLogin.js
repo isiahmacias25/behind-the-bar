@@ -12,46 +12,56 @@ const firebaseConfig = {
   appId: "1:134727677191:web:6c15d2e83196abd36b81a2"
 };
 
-// Initialize Firebase app
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-
-// Initialize Firebase auth
 const auth = getAuth(app);
 
 // Require login check
 onAuthStateChanged(auth, (user) => {
   if (!user) {
     // Redirect to login page if not logged in
-    window.location.href = "index.html";
-  } else {
-   
-   
-    }
+    window.location.href = "/";
+    return;
+  }
+
+  // Store the roadName (capitalized) in sessionStorage if not already
+  if (!sessionStorage.getItem("roadName")) {
+    const email = user.email;                   // get user email
+    const roadName = email.split("@")[0];       // take the part before @
+    sessionStorage.setItem(
+      "roadName",
+      roadName.charAt(0).toUpperCase() + roadName.slice(1)
+    );
+  }
+
+  // Update footer element with road name
+  const footerNameElem = document.getElementById("currentUser");
+  if (footerNameElem) {
+    footerNameElem.textContent = sessionStorage.getItem("roadName");
+  }
 });
 
 // Auto logout after inactivity
 let inactivityTimer;
 
-// Reset inactivity timer
 function resetInactivityTimer() {
   clearTimeout(inactivityTimer);
   inactivityTimer = setTimeout(() => {
-    // Sign out user after 15 minutes of inactivity
     signOut(auth).then(() => {
-      window.location.href = "index.html";
+      window.location.href = "/";
     });
   }, 15 * 60 * 1000); // 15 minutes
 }
 
-// Track user activity to reset timer
-['click', 'mousemove', 'keydown', 'scroll'].forEach(evt => {
+// Track activity
+["click", "mousemove", "keydown", "scroll"].forEach((evt) => {
   window.addEventListener(evt, resetInactivityTimer);
 });
 
-// Sign out user on tab/window close
-window.addEventListener('beforeunload', () => {
+// Logout on tab/window close
+window.addEventListener("beforeunload", () => {
   signOut(auth);
 });
 
-// Start inactivity timer on page load
+// Start inactivity timer
 resetInactivityTimer();
