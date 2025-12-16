@@ -58,10 +58,5 @@ function resetInactivityTimer() {
   window.addEventListener(evt, resetInactivityTimer);
 });
 
-// Logout on tab/window close
-window.addEventListener("beforeunload", () => {
-  signOut(auth);
-});
-
 // Start inactivity timer
 resetInactivityTimer();
