@@ -1,8 +1,10 @@
-// Firebase initialization
+// Import Firebase app initializer
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+
+// Import Firebase auth utilities
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 
-// Firebase config
+// Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyCTIK0ulR0uSHoiPBoK4Fymutw81sM7H_8",
   authDomain: "behindthebar.firebaseapp.com",
@@ -12,51 +14,47 @@ const firebaseConfig = {
   appId: "1:134727677191:web:6c15d2e83196abd36b81a2"
 };
 
-// Initialize Firebase
+// Initialize Firebase app
 const app = initializeApp(firebaseConfig);
+
+// Initialize Firebase auth
 const auth = getAuth(app);
 
-// Require login check
+// Define max inactivity time (6 hours)
+const INACTIVITY_LIMIT = 6 * 60 * 60 * 1000;
+
+// Declare inactivity timer
+let inactivityTimer;
+
+// Function to reset inactivity timer
+function resetInactivityTimer() {
+  // Clear existing timer
+  clearTimeout(inactivityTimer);
+
+  // Start new inactivity timer
+  inactivityTimer = setTimeout(() => {
+    // Sign out user after inactivity limit
+    signOut(auth).then(() => {
+      // Redirect to login page after logout
+      window.location.href = "/";
+    });
+  }, INACTIVITY_LIMIT);
+}
+
+// Listen for authentication state changes
 onAuthStateChanged(auth, (user) => {
+  // If no user is logged in
   if (!user) {
-    // Redirect to login page if not logged in
+    // Redirect to login page
     window.location.href = "/";
     return;
   }
 
-  // Store the roadName (capitalized) in sessionStorage if not already
-  if (!sessionStorage.getItem("roadName")) {
-    const email = user.email;                   // get user email
-    const roadName = email.split("@")[0];       // take the part before @
-    sessionStorage.setItem(
-      "roadName",
-      roadName.charAt(0).toUpperCase() + roadName.slice(1)
-    );
-  }
+  // Reset inactivity timer on successful auth
+  resetInactivityTimer();
 
-  // Update footer element with road name
-  const footerNameElem = document.getElementById("currentUser");
-  if (footerNameElem) {
-    footerNameElem.textContent = sessionStorage.getItem("roadName");
-  }
+  // Track user activity to keep session alive
+  ['click', 'mousemove', 'keydown', 'scroll'].forEach(event => {
+    window.addEventListener(event, resetInactivityTimer);
+  });
 });
-
-// Auto logout after inactivity
-let inactivityTimer;
-
-function resetInactivityTimer() {
-  clearTimeout(inactivityTimer);
-  inactivityTimer = setTimeout(() => {
-    signOut(auth).then(() => {
-      window.location.href = "/";
-    });
-  }, 15 * 60 * 1000); // 15 minutes
-}
-
-// Track activity
-["click", "mousemove", "keydown", "scroll"].forEach((evt) => {
-  window.addEventListener(evt, resetInactivityTimer);
-});
-
-// Start inactivity timer
-resetInactivityTimer();
