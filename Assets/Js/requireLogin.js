@@ -1,7 +1,7 @@
 // Import Firebase app initializer
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
 
-// Import Firebase auth utilities
+// Import Firebase auth functions
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 
 // Firebase configuration
@@ -14,47 +14,73 @@ const firebaseConfig = {
   appId: "1:134727677191:web:6c15d2e83196abd36b81a2"
 };
 
-// Initialize Firebase app
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-// Initialize Firebase auth
+// Initialize Auth
 const auth = getAuth(app);
 
-// Define max inactivity time (6 hours)
-const INACTIVITY_LIMIT = 6 * 60 * 60 * 1000;
-
-// Declare inactivity timer
-let inactivityTimer;
-
-// Function to reset inactivity timer
-function resetInactivityTimer() {
-  // Clear existing timer
-  clearTimeout(inactivityTimer);
-
-  // Start new inactivity timer
-  inactivityTimer = setTimeout(() => {
-    // Sign out user after inactivity limit
-    signOut(auth).then(() => {
-      // Redirect to login page after logout
-      window.location.href = "/";
-    });
-  }, INACTIVITY_LIMIT);
-}
-
-// Listen for authentication state changes
+// Require user to be logged in
 onAuthStateChanged(auth, (user) => {
-  // If no user is logged in
+  // If no user, force back to login
   if (!user) {
-    // Redirect to login page
-    window.location.href = "/";
+    window.location.replace("/");
     return;
   }
 
-  // Reset inactivity timer on successful auth
-  resetInactivityTimer();
+  // Get footer username element
+  const footerNameElem = document.getElementById("currentUser");
 
-  // Track user activity to keep session alive
-  ['click', 'mousemove', 'keydown', 'scroll'].forEach(event => {
-    window.addEventListener(event, resetInactivityTimer);
-  });
+  // Only run if footer exists on page
+  if (footerNameElem) {
+
+    // Use cached name if available
+    let roadName = sessionStorage.getItem("roadName");
+
+    // If not cached, derive from user
+    if (!roadName) {
+      // Prefer display name
+      roadName = user.displayName;
+
+      // Fallback to email prefix
+      if (!roadName && user.email) {
+        roadName = user.email.split("@")[0];
+      }
+
+      // Capitalize name
+      roadName = roadName.charAt(0).toUpperCase() + roadName.slice(1);
+
+      // Cache for session
+      sessionStorage.setItem("roadName", roadName);
+    }
+
+    // Update footer
+    footerNameElem.textContent = roadName;
+  }
 });
+
+// -------------------------
+// Inactivity auto-logout
+// -------------------------
+
+let inactivityTimer;
+
+// Reset inactivity timer
+function resetInactivityTimer() {
+  clearTimeout(inactivityTimer);
+
+  // 6 hours (bar-safe)
+  inactivityTimer = setTimeout(() => {
+    signOut(auth).then(() => {
+      window.location.replace("/");
+    });
+  }, 6 * 60 * 60 * 1000);
+}
+
+// Track user activity
+["click", "mousemove", "keydown", "scroll"].forEach(event => {
+  window.addEventListener(event, resetInactivityTimer);
+});
+
+// Start timer when page loads
+resetInactivityTimer();
